@@ -3,7 +3,7 @@ import numpy as np
 import re 
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer 
-nltk.download("stopwords')
+from nltk.stem import WordNetLemmatizer
 
 df = pd.read_csv('fake_or_real_news.csv')
 
@@ -17,15 +17,16 @@ title = [ps.stem(word) for word in title if not word in set (stopwords.words('en
 title = ' '.join(title)"""
 
 ps = PorterStemmer ()
+lemmatizer = WordNetLemmatizer()
 
 def clean_text (text):
     title =re.sub('[^a-zA-Z]' ,' ', text)
     title = title.lower()
     title = title.split()
-    title = [ps.stem(word) for word in title if not word in set (stopwords.words('english'))]
+    title = [lemmatizer.lemmatize(word) for word in title if not word in set (stopwords.words('english'))]
     title = ' '.join(title)
     return title
-
+	
 df['new_column'] = df['title'].apply(clean_text)   
 
          
