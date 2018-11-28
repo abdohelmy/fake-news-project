@@ -3,7 +3,10 @@ import re
 import time
 import pandas as pd 
 import numpy as np 
+
 import pickle
+=======
+
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer 
 from nltk.stem import WordNetLemmatizer
@@ -26,7 +29,10 @@ class Model:
 		self.dataset = pd.read_csv(path)
 
 	def clean_text (self , text):
+
 		text = str(text)
+=======
+
 		text = text.replace(","," ")
 		text = re.sub('[^a-zA-Z]' ,' ',text)
 		text = text.lower()
@@ -38,12 +44,15 @@ class Model:
 
 	def data_preprocessing(self):
 		self.dataset["label"] 		=self.enc.fit_transform(self.dataset["label"])
+
 		#self.dataset.drop("Unnamed: 0",axis=1,inplace=True)
 		#self.dataset['title'] 		= self.dataset['title'].apply(self.clean_text)
 		#self.dataset['text'] 		= self.dataset['text'].apply(self.clean_text)
 		#self.dataset.dropna(inplace=True)
 		#self.dataset.to_csv("preprocessed.csv", encoding='utf-8', index=False)
 		self.x 						= self.dataset['title']
+=======
+
 		self.y 						= self.dataset['label']
 		self.tfidf_x				= self.tfidf.fit_transform(self.x)
 		self.x_train,self.x_test,self.y_train,self.y_test = train_test_split(self.tfidf_x,self.y,test_size=0.25)
@@ -59,8 +68,10 @@ class Model:
 		t1 = time.time()
 		self.classifier.fit(self.x_train,self.y_train)
 		print("Training take : ",(time.time()-t1))
+
 		#with open("model.pickle","w") as file:
 			#pickle.dump(self.classifier, file)
+
 
 	def evaluate(self):
 		train_score = self.classifier.score(self.x_train,self.y_train)
@@ -68,6 +79,7 @@ class Model:
 		#y_pred      = self.classifier.predict(self.x_test)
 		#print(classification_report(self.y_test, y_pred))
 		return train_score,test_score
+
 
 	def test(self,title):
 		#with open("model.pickle","w") as file:
@@ -100,6 +112,24 @@ if __name__ == '__main__':
 	#text = "no stranger to intense security, who marched beside Hollande through the city streets. The highest ranking U.S. officials attending the march were Jane Hartley, the ambassador to France, and Victoria Nuland, the assistant secretary of state for European affairs. Attorney General Eric H. Holder Jr. was in Paris for meetings with law enforcement officials but did not participate in the march."
 	print("=====================================================")
 	print(model.test(title))
+=======
+	def test(self,title,text):
+		title = self.clean_text(title)
+		title = self.tfidf.transform(title)
+		text  = self.clean_text(text)
+		text  = self.tfidf.transform(text)
+		return self.classifier.predict([title,text])
+
+if __name__ == '__main__':
+	model = Model()
+	model.train("fake_or_real_news.csv")
+	print("=====================================================")
+	print(model.evaluate())
+	title = "Among roughly 40 leaders who did attend was Israeli Prime Minister Benjamin Netanyahu"
+	text = "no stranger to intense security, who marched beside Hollande through the city streets. The highest ranking U.S. officials attending the march were Jane Hartley, the ambassador to France, and Victoria Nuland, the assistant secretary of state for European affairs. Attorney General Eric H. Holder Jr. was in Paris for meetings with law enforcement officials but did not participate in the march."
+	print("=====================================================")
+	print(model.test(title,text))
+
 
 
 #df = pd.read_csv("Datasets/fake_or_real_news.csv")
