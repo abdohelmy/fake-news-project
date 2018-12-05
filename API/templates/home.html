@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+        <title>Home</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+        <link rel="shortcut icon" type="image/png" href="/static/favicon.ico">
+</head>
+<center style="position: fixed;top: 0;left: 35%;">
+	<h1 ><b>Fake News Detector</b></h1>
+	<img src="/static/img/logo.png" style="width:250px;height:250px;">
+</center>
+
+<div class="column left" style="padding-top: 6%;">
+	<center>
+		<div>
+			<strong><h3 style="color: white;">Help us to improve our model accuracy by adding vaild news</h3></strong>
+		</div>
+		<div >
+			<form action="{{ url_for('added') }}" method="POST" class="control-group" enctype="multipart/form-data">
+				<b><h4>Add Title</h4></b>
+		        <input type="text" class="login-field" name="title" placeholder="Title" style="width: 100%;margin: 0px;">
+		        <br>
+		        <b><h4>Add Article</h4></b>
+		        <textarea rows="5" cols="48" charswidth="23" class="login-field" name="article" placeholder="Article" style="resize:none;margin: 0px;background-color: #ECF0F1;"></textarea>
+		        <br>
+	        	<div>
+					<input type="radio" name="check" value="real"> Real<br>
+					<input type="radio" name="check" value="fake"> Fake<br>	
+				</div>
+		        <center>
+		        	<input type="submit" name="add" value="ADD" style="cursor: pointer;margin: 10px;" class="btn btn-primary btn-large btn-block">
+		        	{% with messege = get_flashed_messages(category_filter=["add"]) %}
+						{% if messege %}
+							<p style="color:black;">{{messege[0]}}</p>
+						{% endif %}
+					{% endwith %}
+		        </center>
+    		</form>
+		</div>
+	</center>
+</div>
+
+
+
+<div class="column right">
+	<center>
+		<div class="centered">
+			<form action="{{ url_for('check') }}" method="POST" class="control-group" enctype="multipart/form-data">
+				<b><h3>Write Title</h3></b>
+		        <input type="text" class="login-field" name="title" placeholder="Title" style="width: 99%;margin: 3px;">
+		        <br>
+		        <b><h3>Write Article</h3></b>
+		        <textarea rows="8" cols="52" charswidth="23" class="login-field" name="article" placeholder="Article" style="resize:none;margin: 3px;background-color: #ECF0F1;"></textarea>
+		        <br>
+		        <center>
+		        	<input type="submit" value="Submit" style="cursor: pointer;margin: 10px;" class="btn btn-primary btn-large btn-block">
+		        	{% with messege = get_flashed_messages(category_filter=["true"]) %}
+						{% if messege %}
+		        			<input type="button" value=	{{messege[0]}} style="margin: 10px;background-color: green;" class="btn btn-primary btn-large btn-block">
+						{% endif %}
+					{% endwith %}
+					{% with messege = get_flashed_messages(category_filter=["false"]) %}
+						{% if messege %}
+							<input type="button" value={{messege[0]}} style="margin: 10px;background-color: red;" class="btn btn-primary btn-large btn-block">
+						{% endif %}
+					{% endwith %}
+					{% with messege = get_flashed_messages(category_filter=["small"]) %}
+						{% if messege %}
+							<strong><p style="color:black;font:bold;">{{messege[0]}}</p></strong>
+						{% endif %}
+					{% endwith %}
+		        </center>
+    		</form>
+		</div>
+
+	</center>
+</div>
+<div style="position: fixed;bottom: 0;left: 35%;">
+	<center>
+		<form action="/logout">
+        	<input type="submit" value="Log out" style="cursor: pointer;margin: 30px;" class="btn btn-primary btn-large btn-block">
+		</form>
+	</center>
+</div>
+
+
+</html>
