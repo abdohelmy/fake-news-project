@@ -1,0 +1,10 @@
+django
+gunicorn
+django-heroku
+Flask
+flask-login
+numpy
+scipy
+scikit-learn
+sklearn
+nltk
